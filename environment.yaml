@@ -4,7 +4,7 @@ channels:
 - bioconda
 - nodefaults
 dependencies:
-- python=3.11.15
+- python=3.12.13
 - conda
 - git
 - pip
