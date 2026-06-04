@@ -1,34 +1,29 @@
-name: UNDERSCORED_PROJECT_NAME
-version: VERSION_NUMBER
-
+name: VLab4Mic
+version: 0.1.0
 environment_file: environment.yaml
 installer_type: all
 license_file: LICENSE
-
-welcome_image: WELCOME_IMAGE
-header_image: HEADER_IMAGE
-icon_image: ICON_IMAGE
-
-conclusion_text: 'Thank you! You have successfully installed PROJECT_NAME VERSION_NUMBER.'
-
+welcome_image: app/logo/logo.png
+header_image: app/logo/logo.png
+icon_image: app/logo/20260602_vlab4mic_fig2_NPC.png
+conclusion_text: Thank you! You have successfully installed VLab4Mic 0.1.0.
 keep_pkgs: false
 register_python: false
 initialize_conda: false
-
 extra_files:
 - app/bash_bat_scripts/pre_uninstall.sh: pre_uninstall.sh
 - app/bash_bat_scripts/uninstall.sh: uninstall.sh
-- app/menuinst/Welcome.ipynb: PROJECT_NAME/notebooks/Welcome.ipynb
-- app/menuinst/notebook_launcher.json: PROJECT_NAME/notebook_launcher.json
-- app/python_scripts/hide_code_cells.py: PROJECT_NAME/hide_code_cells.py
-- app/python_scripts/include_path.py: PROJECT_NAME/include_path.py
-- notebooks/notebook_latest_versions.yaml: PROJECT_NAME/notebook_latest_versions.yaml
-- requirements.txt: PROJECT_NAME/requirements.txt
-- construct.yaml: PROJECT_NAME/construct.yaml
-
+- app/logo/20260602_vlab4mic_fig2_NPC.icns: VLab4Mic/20260602_vlab4mic_fig2_NPC.icns
+- app/logo/20260602_vlab4mic_fig2_NPC.ico: VLab4Mic/20260602_vlab4mic_fig2_NPC.ico
+- app/logo/20260602_vlab4mic_fig2_NPC.png: VLab4Mic/20260602_vlab4mic_fig2_NPC.png
+- app/menuinst/Welcome.ipynb: VLab4Mic/notebooks/Welcome.ipynb
+- app/menuinst/notebook_launcher.json: VLab4Mic/notebook_launcher.json
+- app/python_scripts/hide_code_cells.py: VLab4Mic/hide_code_cells.py
+- app/python_scripts/include_path.py: VLab4Mic/include_path.py
+- construct.yaml: VLab4Mic/construct.yaml
+- notebooks/notebook_latest_versions.yaml: VLab4Mic/notebook_latest_versions.yaml
+- requirements.txt: VLab4Mic/requirements.txt
 post_install: app/bash_bat_scripts/post_install.bat # [win]
 post_install: app/bash_bat_scripts/post_install.sh # [unix]
-
 pre_uninstall: app/bash_bat_scripts/pre_uninstall.bat # [win]
 pre_uninstall: app/bash_bat_scripts/pre_uninstall.sh # [unix]
-
