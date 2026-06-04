@@ -4,8 +4,8 @@ dependencies:
 - requests==2.34.2
 - vlab4mic==0.1.0
 - vlab4micjupyter==0.1.0
-description: This notebook 'Vlab4Mic_main.ipynb' is for ...
+description: This notebook 'VLab4Mic_main.ipynb' is for ...
 linux_dependencies: []
 macos_dependencies: []
-python_version: 3.11.15
+python_version: 3.12.13
 windows_dependencies: []
