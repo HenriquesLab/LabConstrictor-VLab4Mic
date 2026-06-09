@@ -111,11 +111,17 @@ def bump_post_install_bat(new_version: str) -> None:
     print(f"Updated post_install.bat PKG_VERSION to {new_version}")
 
 def bump_version_in_download_executable_md(new_version: str) -> None:
-    download_md = ROOT / "docs" / "download_executable.md"
+    download_md = ROOT / ".tools" / "docs" / "download_executable.md"
     if not download_md.exists():
         return
-    # This file may contain the version in various formats, so we use the flexible replacement function
-    if replace_version_in_file(download_md, new_version, new_version):
+    # Every SemVer in this doc is the VLab4Mic installer/asset version (release
+    # tag paths and `VLab4Mic-X.Y.Z-...` filenames), so normalise them all to the
+    # new version. This is robust to whatever baseline version the copied template
+    # carries, unlike an old->new replacement that has to know the previous value.
+    text = download_md.read_text(encoding="utf-8")
+    updated = re.sub(r"\d+\.\d+\.\d+", new_version, text)
+    if updated != text:
+        download_md.write_text(updated, encoding="utf-8")
         print(f"Updated download_executable.md to version {new_version}")
     else:
         print("No version string found in download_executable.md to update.")
