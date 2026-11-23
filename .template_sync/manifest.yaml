@@ -1,4 +1,4 @@
-template_version: 0.1.19
+template_version: 0.1.40
 migrations:
   - from: 0.0.0
     to: 0.0.1
@@ -63,3 +63,66 @@ migrations:
   - from: 0.1.18
     to: 0.1.19
     script: migrations/v0_1_18_to_v0_1_19.py
+  - from: 0.1.19
+    to: 0.1.20
+    script: migrations/v0_1_19_to_v0_1_20.py
+  - from: 0.1.20
+    to: 0.1.21
+    script: migrations/v0_1_20_to_v0_1_21.py
+  - from: 0.1.21
+    to: 0.1.22
+    script: migrations/v0_1_21_to_v0_1_22.py
+  - from: 0.1.22
+    to: 0.1.23
+    script: migrations/v0_1_22_to_v0_1_23.py
+  - from: 0.1.23
+    to: 0.1.24
+    script: migrations/v0_1_23_to_v0_1_24.py
+  - from: 0.1.24
+    to: 0.1.25
+    script: migrations/v0_1_24_to_v0_1_25.py
+  - from: 0.1.25
+    to: 0.1.26
+    script: migrations/v0_1_25_to_v0_1_26.py
+  - from: 0.1.26
+    to: 0.1.27
+    script: migrations/v0_1_26_to_v0_1_27.py
+  - from: 0.1.27
+    to: 0.1.28
+    script: migrations/v0_1_27_to_v0_1_28.py
+  - from: 0.1.28
+    to: 0.1.29
+    script: migrations/v0_1_28_to_v0_1_29.py
+  - from: 0.1.29
+    to: 0.1.30
+    script: migrations/v0_1_29_to_v0_1_30.py
+  - from: 0.1.30
+    to: 0.1.31
+    script: migrations/v0_1_30_to_v0_1_31.py
+  - from: 0.1.31
+    to: 0.1.32
+    script: migrations/v0_1_31_to_v0_1_32.py
+  - from: 0.1.32
+    to: 0.1.33
+    script: migrations/v0_1_32_to_v0_1_33.py
+  - from: 0.1.33
+    to: 0.1.34
+    script: migrations/v0_1_33_to_v0_1_34.py
+  - from: 0.1.34
+    to: 0.1.35
+    script: migrations/v0_1_34_to_v0_1_35.py
+  - from: 0.1.35
+    to: 0.1.36
+    script: migrations/v0_1_35_to_v0_1_36.py
+  - from: 0.1.36
+    to: 0.1.37
+    script: migrations/v0_1_36_to_v0_1_37.py
+  - from: 0.1.37
+    to: 0.1.38
+    script: migrations/v0_1_37_to_v0_1_38.py
+  - from: 0.1.38
+    to: 0.1.39
+    script: migrations/v0_1_38_to_v0_1_39.py
+  - from: 0.1.39
+    to: 0.1.40
+    script: migrations/v0_1_39_to_v0_1_40.py

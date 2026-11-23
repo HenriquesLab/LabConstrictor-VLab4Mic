@@ -67,6 +67,10 @@ IF EXIST "%GPU_REQUIREMENTS%" (
     echo GPU requirements file not found, installing CPU requirements from "%BASE_REQUIREMENTS%" >> "%LOG_FILE%"
 )
 
+REM A lock file (requirements*.lock.txt next to the requirements file: every package with its exact version, written by
+REM .tools/python/lock_requirements.py) is installed instead of the requirements file when the installer bundles one.
+SET "SELECTED_LOCK=%SELECTED_REQUIREMENTS:~0,-4%.lock.txt"
+IF EXIST "%SELECTED_LOCK%" SET "SELECTED_REQUIREMENTS=%SELECTED_LOCK%"
 echo Installing requirements from "%SELECTED_REQUIREMENTS%" >> "%LOG_FILE%"
 "%PYTHON_EXE%" -m pip install -r "%SELECTED_REQUIREMENTS%" >> "%LOG_FILE%" 2>&1
 IF ERRORLEVEL 1 (
@@ -74,9 +78,11 @@ IF ERRORLEVEL 1 (
     GOTO :fail
 )
 
+SET "WINDOWS_REQUIREMENTS=%PROJECT_ROOT%\requirements-windows.txt"
+IF EXIST "%PROJECT_ROOT%\requirements-windows.lock.txt" SET "WINDOWS_REQUIREMENTS=%PROJECT_ROOT%\requirements-windows.lock.txt"
 IF EXIST "%PROJECT_ROOT%\requirements-windows.txt" (
-    echo Installing Windows-specific requirements. >> "%LOG_FILE%"
-    "%PYTHON_EXE%" -m pip install -r "%PROJECT_ROOT%\requirements-windows.txt" >> "%LOG_FILE%" 2>&1
+    echo Installing Windows-specific requirements from "%WINDOWS_REQUIREMENTS%". >> "%LOG_FILE%"
+    "%PYTHON_EXE%" -m pip install -r "%WINDOWS_REQUIREMENTS%" >> "%LOG_FILE%" 2>&1
     IF ERRORLEVEL 1 (
         SET "FAILURE_MESSAGE=Windows-specific requirements installation failed."
         GOTO :fail
@@ -124,7 +130,7 @@ SET "LC_APP_MANIFEST="
 IF EXIST "%PROJECT_ROOT%\labconstrictor-app.yaml" SET "LC_APP_MANIFEST=%PROJECT_ROOT%\labconstrictor-app.yaml"
 "%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('vlab4mic_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
 IF NOT ERRORLEVEL 1 (
-    echo Found vlab4mic_lc_tools: registering the tools of VLab4Mic for Napari and Fiji. >> "%LOG_FILE%"
+    echo Found vlab4mic_lc_tools: registering the tools of VLab4Mic for Napari, Fiji and QuPath. >> "%LOG_FILE%"
     REM Which hosts list the app (the sentence is the one Tools uses for an app without hosts). Logged before the READY check, which sets the errorlevel.
     IF NOT DEFINED LC_APP_MANIFEST echo WARNING: labconstrictor-app.yaml was not found in "%PROJECT_ROOT%" ^(add it to extra_files in construct.yaml^), so VLab4Mic is registered without hosts. 'VLab4Mic' declares no hosts, so it is listed in every host; register it with --app-manifest ^(or --hosts^) to choose >> "%LOG_FILE%"
     IF DEFINED LC_APP_MANIFEST echo Passing the hosts of "%LC_APP_MANIFEST%" to Tools ^(--app-manifest^); Tools logs the same sentence if the file declares no hosts. >> "%LOG_FILE%"
@@ -178,15 +184,19 @@ IF ERRORLEVEL 1 (
 
 SET "ARP_KEY=HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\VLab4Mic"
 SET "UNINSTALL_EXE=%PREFIX%\Uninstall-VLab4Mic.exe"
-SET "DISPLAY_ICON=%PROJECT_ROOT%\logo.ico"
+REM Windows Apps list: the version of this installer (the version: line of the bundled construct.yaml, written by each release),
+REM and the app icon the installer copied (the first .ico in the app folder); no icon entry when there is none.
 SET "DISPLAY_VERSION=0.1.3"
+IF EXIST "%PROJECT_ROOT%\construct.yaml" FOR /F "usebackq tokens=1,* delims=: " %%A IN (`findstr /B /C:"version:" "%PROJECT_ROOT%\construct.yaml"`) DO SET "DISPLAY_VERSION=%%~B"
+SET "DISPLAY_ICON="
+FOR %%I IN ("%PROJECT_ROOT%\*.ico") DO IF NOT DEFINED DISPLAY_ICON SET "DISPLAY_ICON=%%~fI"
 SET "PUBLISHER=HenriquesLab"
 echo Registering VLab4Mic in Windows Apps list >> "%LOG_FILE%"
 reg add "%ARP_KEY%" /v DisplayName /d "VLab4Mic" /f >> "%LOG_FILE%" 2>&1
 reg add "%ARP_KEY%" /v DisplayVersion /d "%DISPLAY_VERSION%" /f >> "%LOG_FILE%" 2>&1
 reg add "%ARP_KEY%" /v Publisher /d "%PUBLISHER%" /f >> "%LOG_FILE%" 2>&1
 reg add "%ARP_KEY%" /v InstallLocation /d "%PREFIX%" /f >> "%LOG_FILE%" 2>&1
-reg add "%ARP_KEY%" /v DisplayIcon /d "%DISPLAY_ICON%" /f >> "%LOG_FILE%" 2>&1
+IF DEFINED DISPLAY_ICON reg add "%ARP_KEY%" /v DisplayIcon /d "%DISPLAY_ICON%" /f >> "%LOG_FILE%" 2>&1
 reg add "%ARP_KEY%" /v UninstallString /d "\"%UNINSTALL_EXE%\"" /f >> "%LOG_FILE%" 2>&1
 reg add "%ARP_KEY%" /v QuietUninstallString /d "\"%UNINSTALL_EXE%\" /S" /f >> "%LOG_FILE%" 2>&1
 reg add "%ARP_KEY%" /v NoModify /t REG_DWORD /d 1 /f >> "%LOG_FILE%" 2>&1
@@ -229,7 +239,7 @@ REM This step must never fail the installation: a failure is logged as a WARNING
 REM LC_TOOLS_SPEC can point to another source (wheel, git URL, mirror).
 REM Default source: the GitHub archive of the labconstrictor-tools release TAG below (a plain zip: no git needed on the user's computer),
 REM because the package is not on PyPI yet. Once it is, use "labconstrictor-tools" here. To move the pin, change only this tag.
-SET "LC_TOOLS_PIN=v0.3.0-alpha.1"
+SET "LC_TOOLS_PIN=v0.3.0-alpha.4"
 IF NOT DEFINED LC_TOOLS_SPEC SET "LC_TOOLS_SPEC=https://github.com/CellMigrationLab/LabConstrictor-Tools/archive/refs/tags/%LC_TOOLS_PIN%.zip"
 SET "LC_TOOLS_READY=0"
 "%PYTHON_EXE%" -c "import importlib.util, sys; sys.exit(0 if importlib.util.find_spec('vlab4mic_lc_tools') else 1)" >> "%LOG_FILE%" 2>&1
