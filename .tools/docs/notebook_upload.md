@@ -12,7 +12,7 @@ To ensure your notebook works with the versioning tracking provided by the LabCo
 
 > IMPORTANT NOTE: Each time you change the notebook's logic, update the version number on `current_version` variable so users can see there is a new version.
 
-```
+```python
 # @markdown Run this cell to check this notebook's version.
 
 current_version = "0.0.1"
@@ -109,7 +109,9 @@ try:
             content = version_response.json()['content']
             decoded_content = base64.b64decode(content).decode('utf-8')
             config = yaml.safe_load(decoded_content)
-            latest_version = config.get(notebook_name, "")
+            # notebook_latest_versions.yaml groups the notebooks by folder: {"<folder>": {"<notebook>": "<version>"}}
+            latest_version = next((str(group[notebook_name]) for group in (config or {}).values()
+                                   if isinstance(group, dict) and notebook_name in group), "")
 
             output_area.value = (f"<b>Notebook version:</b> `{current_version}`<br>"
                                 f"<b>Latest version available:</b> `{latest_version}`<br>")
